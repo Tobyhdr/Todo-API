@@ -35,8 +35,8 @@ sequelize.sync().then(function () {
 	// }).then(function (todo) {
 	// 	return Todo.create({
 	// 		description: 'Develop perilous rhetoric'
-	// 	})
-	// }).then(function (){
+	// 	});
+	// }).then(function () {
 	// 	//return Todo.findById(1)
 	// 	return Todo.findAll({
 	// 		where: {
