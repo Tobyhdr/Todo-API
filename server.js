@@ -67,7 +67,7 @@ app.post('/todos', function(req, res) {
 
 	db.todo.create(body).then(function (todo) {
 		res.json(todo.toJSON());
-	}, function() {
+	}, function(e) {
 		res.status(400).json(e);
 	});
 });
@@ -121,6 +121,16 @@ app.put('/todos/:id', function(req, res) {
 		res.status(500).send();
 	});
 
+});
+
+app.post('/users', function (req, res){
+	var body = _.pick(req.body, 'email', 'password');
+
+	db.users.create(body).then(function (user) {
+		res.json(user.toJSON());
+	}, function(e) {
+		res.status(400).json(e);
+	});
 });
 
 db.sequelize.sync().then(function() {
