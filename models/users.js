@@ -25,9 +25,11 @@ module.exports = function(sequelize, DataTypes) {
 			validate: {
 				len: [7, 100]
 			},
-			set: function (value){
-				var salt = bcrypt.genSaltSync(10);
-				var hashedPassword = bcrypt.hashSync(value, salt);
+			set: function (value){ //For "set" see "default". "value" is the name of the property
+			//whose default behaviour is being amended in the "set" code, i.e. "password".
+				var salt = bcrypt.genSaltSync(10); //Generates a random 10-character salt
+				var hashedPassword = bcrypt.hashSync(value, salt); //Salt password here
+				//Next three lines either validates data (password) or writes to the DB
 				this.setDataValue('password', value);
 				this.setDataValue('salt', salt);
 				this.setDataValue('password_hash', hashedPassword);
@@ -62,6 +64,27 @@ module.exports = function(sequelize, DataTypes) {
 						return reject();
 					}
 				})
+			},
+			findByToken: function (token) {
+				return new Promise(function (resolve, reject) {
+					try {
+						var decodedJWT = jwt.verify(token, 'qwertz890');
+						var bytes = cryptojs.AES.decrypt(decodedJWT.token, 'abc123!@#!');
+						var tokenData = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
+
+						user.findById(tokenData.id).then(function (user) {
+							if (user) {
+								resolve(user);
+							} else {
+								reject();
+							}
+						}, function (e){
+							reject(e);
+						})
+					} catch (e) {
+						reject(e);
+					}
+				});
 			}
 		},
 		instanceMethods: {
