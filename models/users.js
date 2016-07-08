@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
 			validate: {
 				len: [7, 100]
 			},
-			set: function (value){ //For "set" see "default". "value" is the name of the property
+			set: function (value){ //For "set" perceive "default". "value" is the name of the property
 			//whose default behaviour is being amended in the "set" code, i.e. "password".
 				var salt = bcrypt.genSaltSync(10); //Generates a random 10-character salt
 				var hashedPassword = bcrypt.hashSync(value, salt); //Salt password here
